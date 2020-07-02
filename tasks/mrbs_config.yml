@@ -1,0 +1,8 @@
+---
+
+- name: MRBS | mrbs config inc php
+  template: 
+    src: "config.inc.php.yaml.j2"
+    dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}"
+    owner: "{{ mrbs_dir_owner }}"
+    group: "{{ mrbs_dir_group }}"

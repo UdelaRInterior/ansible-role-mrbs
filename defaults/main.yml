@@ -13,6 +13,9 @@ mrbs_packages:
 mrbs_source_url: "https://sourceforge.net/projects/mrbs/files/mrbs/MRBS%201.7.5/mrbs-1.7.5.tar.gz/download"
 mrbs_base_dir: "/var/www/html"
 mrbs_dir_name: "mrbs"
+mrbs_dir_owner: "www-data"
+mrbs_dir_group: "www-data"
+mrbs_dir_mode: "0644"
 
 #########################
 #data base parameters####
@@ -20,4 +23,8 @@ mrbs_dir_name: "mrbs"
 
 mrbs_db_name: "mrbsdb"
 mrbs_db_tables: "tables.my.sql"
-mrbs_db_user: mrbs
+mrbs_db_user: "mrbs"
+mrbs_db_password: "mrbs"
+mrbs_db_host: "localhost"
+mrbs_db_system: "mysql"
+mrbs_db_persist: "FALSE"

@@ -4,3 +4,6 @@
 - include_tasks: install.yml
 
 - include_tasks: db_config.yml
+
+- include_tasks: mrbs_config.yml
+

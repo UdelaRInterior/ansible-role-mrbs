@@ -17,3 +17,10 @@
     copy: no
   with_items:
     - "{{ mrbs_files.stdout }}"
+
+- name: MRBS | Dir ownership and permissions
+  file: 
+    path: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}"
+    owner: "{{ mrbs_dir_owner }}"
+    group: "{{ mrbs_dir_group }}"
+    mode: "{{ mrbs_dir_mode }}"
