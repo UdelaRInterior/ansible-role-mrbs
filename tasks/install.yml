@@ -1,0 +1,19 @@
+---
+
+- name: MRBS | Packages
+  package: name={{ item }} 
+  with_items: "{{ mrbs_packages }}"
+
+- name: MRBS | Download
+  get_url:
+    url: "{{ mrbs_source_url }}"
+    dest: "{{ mrbs_base_dir }}"
+  register: mrbs_files
+
+- name: MRBS | Unarchive
+  unarchive: 
+    src: "{{ mrbs_base_dir }}/{{ item }}"
+    dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}"
+    copy: no
+  with_items:
+    - "{{ mrbs_files.stdout }}"

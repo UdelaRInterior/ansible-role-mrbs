@@ -1,0 +1,7 @@
+---
+
+- name: MRBS | Download
+  mysql_db: 
+    name: "{{ mrbs_db_name }}"
+    state: import
+    target: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}/{{ mrbs_db_tables }}"
