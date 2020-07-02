@@ -20,4 +20,4 @@ mrbs_dir_name: "mrbs"
 
 mrbs_db_name: "mrbsdb"
 mrbs_db_tables: "tables.my.sql"
-
+mrbs_db_user: mrbs
