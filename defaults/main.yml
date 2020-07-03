@@ -7,10 +7,11 @@
 
 mrbs_packages:
   - mariadb-server
-  - php libapache2-mod-php
+  - libapache2-mod-php
   - php-mysql
 
-mrbs_source_url: "https://sourceforge.net/projects/mrbs/files/mrbs/MRBS%201.7.5/mrbs-1.7.5.tar.gz/download"
+mrbs_version: "1.7.5"
+mrbs_source_url: "https://sourceforge.net/projects/mrbs/files/mrbs/MRBS%20{{ mrbs_version }}/mrbs-{{ mrbs_version }}.tar.gz/download"
 mrbs_base_dir: "/var/www/html"
 mrbs_dir_name: "mrbs"
 mrbs_dir_owner: "www-data"
