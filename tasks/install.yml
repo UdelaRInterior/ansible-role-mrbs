@@ -17,9 +17,12 @@
     remote_src: True
   when: mrbs_download.changed
 
-- name: MRBS | Dir ownership and permissions
-  file: 
-    path: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}"
+- name: MRBS | Copy web directory
+  copy: 
+    src: "{{ mrbs_base_dir }}/mrbs-{{ mrbs_version }}"
+    dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}"
     owner: "{{ mrbs_dir_owner }}"
     group: "{{ mrbs_dir_group }}"
     mode: "{{ mrbs_dir_mode }}"
+    remote_src: yes
+  when: mrbs_download.changed
