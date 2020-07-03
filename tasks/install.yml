@@ -7,22 +7,21 @@
 - name: MRBS | Download
   get_url:
     url: "{{ mrbs_source_url }}"
-    dest: "{{ mrbs_base_dir }}/mrbs-{{ mrbs_version }}.tar.gz"
+    dest: "{{ mrbs_download_dir }}/mrbs-{{ mrbs_version }}.tar.gz"
   register: mrbs_download
 
 - name: MRBS | Unarchive
   unarchive: 
-    src: "{{ mrbs_base_dir }}/mrbs-{{ mrbs_version }}.tar.gz"
-    dest: "{{ mrbs_base_dir }}"
+    src: "{{ mrbs_download_dir }}/mrbs-{{ mrbs_version }}.tar.gz"
+    dest: "{{ mrbs_download_dir }}"
     remote_src: True
   when: mrbs_download.changed
 
 - name: MRBS | Copy web directory
   copy: 
-    src: "{{ mrbs_base_dir }}/mrbs-{{ mrbs_version }}"
+    src: "{{ mrbs_download_dir }}/mrbs-{{ mrbs_version }}/web/"
     dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}"
     owner: "{{ mrbs_dir_owner }}"
     group: "{{ mrbs_dir_group }}"
     mode: "{{ mrbs_dir_mode }}"
     remote_src: yes
-  when: mrbs_download.changed

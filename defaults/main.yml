@@ -9,10 +9,12 @@ mrbs_packages:
   - mariadb-server
   - libapache2-mod-php
   - php-mysql
+  - python-pymysql
 
 mrbs_version: "1.7.5"
 mrbs_source_url: "https://sourceforge.net/projects/mrbs/files/mrbs/MRBS%20{{ mrbs_version }}/mrbs-{{ mrbs_version }}.tar.gz/download"
 mrbs_base_dir: "/var/www/html"
+mrbs_download_dir: "/usr/src"
 mrbs_dir_name: "mrbs"
 mrbs_dir_owner: "www-data"
 mrbs_dir_group: "www-data"
