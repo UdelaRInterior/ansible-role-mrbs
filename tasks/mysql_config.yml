@@ -1,0 +1,41 @@
+---
+
+
+- name: MRBS | Ensure mysql is running and starts on boot
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+  become: yes
+
+- name: MRBS | Ensure mysql root password is updated for all root accounts
+  mysql_user:
+    name: root
+    host: "{{ mrbs_db_host }}"
+    password: "{{ mrbs_db_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    priv: '*.*:ALL,GRANT'
+    check_implicit_admin: true
+  become: yes
+  notify: restart mysql
+
+- name:  MRBS | Create `/root/.my.cnf`  with root password credentials
+  template:
+    src:  my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    mode: 0600
+  become: yes
+  notify: restart mysql
+
+- name: MRBS | Ensure database exists
+  mysql_db:
+    name: "{{ mrbs_db_name }}"
+    state: present
+  notify: mrbs import database
+
+- name: MRBS | create db user
+  mysql_user:
+    name: "{{ mrbs_db_user }}"
+    priv: '{{ mrbs_db_name }}.*:ALL,GRANT'
+    state: present

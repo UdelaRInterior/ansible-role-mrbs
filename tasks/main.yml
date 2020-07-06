@@ -3,7 +3,8 @@
 
 - include_tasks: install.yml
 
-- include_tasks: db_config.yml
+- include_tasks: mysql_config.yml
+  when: mrbs_db_system == "mysql"
 
 - include_tasks: mrbs_config.yml
 

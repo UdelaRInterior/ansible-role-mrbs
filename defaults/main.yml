@@ -19,6 +19,7 @@ mrbs_dir_name: "mrbs"
 mrbs_dir_owner: "www-data"
 mrbs_dir_group: "www-data"
 mrbs_dir_mode: "0644"
+mrbs_db_tbl_prefix: "mrbs_"
 
 #########################
 #data base parameters####
@@ -28,6 +29,7 @@ mrbs_db_name: "mrbsdb"
 mrbs_db_tables: "tables.my.sql"
 mrbs_db_user: "mrbs"
 mrbs_db_password: "mrbs"
+mrbs_db_root_password: "password"
 mrbs_db_host: "localhost"
 mrbs_db_system: "mysql"
 mrbs_db_persist: "FALSE"

@@ -1,2 +1,13 @@
 ---
 # handlers file for ansible-role-mrbs
+
+- name: restart mysql
+  service:
+    name: mysql
+    state: restarted
+
+- name: mrbs import database
+  mysql_db: 
+    name: "{{ mrbs_db_name }}"
+    state: import
+    target: "{{ mrbs_download_dir }}/mrbs-{{ mrbs_version }}/{{ mrbs_db_tables }}"
