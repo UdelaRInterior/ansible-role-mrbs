@@ -34,7 +34,7 @@
     state: present
   notify: mrbs import database
 
-- name: MRBS | create db user
+- name: MRBS | Create db user
   mysql_user:
     name: "{{ mrbs_db_user }}"
     priv: '{{ mrbs_db_name }}.*:ALL,GRANT'

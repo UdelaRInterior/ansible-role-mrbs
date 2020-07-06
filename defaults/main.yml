@@ -20,6 +20,7 @@ mrbs_dir_owner: "www-data"
 mrbs_dir_group: "www-data"
 mrbs_dir_mode: "0644"
 mrbs_db_tbl_prefix: "mrbs_"
+mrbs_time_zone: "America/Montevideo"
 
 #########################
 #data base parameters####
