@@ -73,6 +73,15 @@ $db_tbl_prefix = "{{ mrbs_db_tbl_prefix }}";
 // connections if you can.
 $db_persist = "{{ mrbs_db_persist }}";
 
+// This is to fix URL problems when using a proxy in the environment.
+// If links inside MRBS appear broken, then specify here the URL of
+// your MRBS root directory, as seen by the users. For example:
+// $url_base =  "http://webtools.uab.ericsson.se/oam";
+// It is also recommended that you set this if you intend to use email
+// notifications, to ensure that the correct URL is displayed in the
+// notification.
+$url_base = "{{ mrbs_url_base }}";
+
 {% if mrbs_shibb_auth %}
 
 // Shibboleth configuration
@@ -83,6 +92,6 @@ $shib['application_url'] = "{{ mrbs_shibb_app_url }}";     // --- Set MRBS appli
 $auth['type'] = "{{ mrbs_shibb_auth_type }}";
 $auth['session']  = "shib";
 $auth['session_shib']['active_session_url'] = $shib['application_url']."{{ mrbs_shibb_active_session_url }}";
-$auth['session_shib']['logout'] = $shib['idp']."{{ mrbs_shibb_idp_logout }}".$shib['sp']."{{ mrbs_shibb_sp_logout }}".urlencode($shib['sp']).urlencode($shib['application_url']);
+$auth['session_shib']['logout'] = {{ mrbs_shibb_logout }}
 
 {% endif %}

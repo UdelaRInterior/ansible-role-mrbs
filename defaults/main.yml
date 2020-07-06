@@ -18,9 +18,10 @@ mrbs_download_dir: "/usr/src"
 mrbs_dir_name: "mrbs"
 mrbs_dir_owner: "www-data"
 mrbs_dir_group: "www-data"
-mrbs_dir_mode: "0644"
+mrbs_dir_mode: "0777"
 mrbs_db_tbl_prefix: "mrbs_"
 mrbs_time_zone: "America/Montevideo"
+mrbs_url_base: "https://example.org"
 
 #########################
 #data base parameters####
@@ -46,5 +47,4 @@ mrbs_shibb_sp: "https://example-sp.org/shibboleth"
 mrbs_shibb_app_url: "/mrbs"
 mrbs_shibb_auth_type: "none"
 mrbs_shibb_active_session_url: "/secure"
-mrbs_shibb_idp_logout: "/ssologout/logout.jsp?returl="
-mrbs_shibb_sp_logout: "/Shibboleth.sso/Logout?return%3D"
+mrbs_shibb_logout: "$shib['sp']."/Shibboleth.sso/Logout";"
