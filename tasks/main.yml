@@ -8,3 +8,7 @@
 
 - include_tasks: mrbs_config.yml
 
+- include_tasks: shibb_auth_config.yml
+  when: mrbs_shibb_auth | bool
+
+

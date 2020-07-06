@@ -1,0 +1,188 @@
+<?php
+
+/*****************************************************************************\
+*                                                                             *
+*   File name       session_shib.inc                                          *
+*                                                                             *
+*   Description     Use shibboleth active sessions                            *
+*                                                                             *
+*   Notes                                                                     *
+*       To use this authentication scheme, set shib and auth parms            *
+*       in config.inc.php (see config_shib_example.php)                       *
+*                                                                             *
+*   History                                                                   *
+*    2014/02/19 Valerio Pulese Created this file                              *
+*    2018/06/20 Paolo Nobili has modified this file                           *
+*                                                                             *
+\*****************************************************************************/
+
+namespace MRBS;
+use MRBS\Form\Form;
+
+require_once MRBS_ROOT . '/session/functions_session.inc';
+
+/* authGet()
+ * 
+ * Request the user name/password
+ * 
+ * Returns: Nothing
+ */
+function authGet()
+{
+  global $QUERY_STRING, $PHP_SELF;
+  global $returl;
+  global $shib, $auth;
+
+  $target_url = $PHP_SELF;
+
+  if (isset($QUERY_STRING))
+  {
+    $target_url = $target_url . "?" . $QUERY_STRING;
+  }
+
+  if (isset($auth["session_shib"]["active_session_url"])) {
+    $target_url = $auth["session_shib"]["active_session_url"] . "/?target_url=".urlencode($target_url);
+    header ("Location: $target_url");
+    exit();
+  } else {
+    print_header();
+    echo "<br>\n";
+    echo "<p>Please set \$auth[\"session_shib\"][\"active_session_url\"] in MRBS config.\n";
+    echo "<br>\n";
+    // Print footer and exit
+    print_footer(TRUE);
+  }
+  exit();
+}
+
+
+function getUserName()
+{
+  if (isset($_SESSION["UserName"]) && ($_SESSION["UserName"] !== ''))
+  {
+    return $_SESSION["UserName"];
+  }
+
+  return NULL;
+}
+
+
+// Print the logon entry on the top banner.
+function print_logon_box()
+{
+  global $QUERY_STRING, $PHP_SELF;
+  global $shib, $auth;
+
+  $target_url = basename($PHP_SELF);
+
+  if (isset($QUERY_STRING))
+  {
+    $target_url = $target_url . "?" . $QUERY_STRING;
+  }
+  
+  $user=getUserName();
+  if (isset($user))
+  {
+    print_report_link($user);
+    print_logoff_button($target_url);
+  }
+  else
+  {
+    print_unknown_user();
+    //print_logon_button($target_url);
+    ?>
+    <form method="post" action="<?php echo $auth['session_shib']['active_session_url']; ?>">
+    <div>
+    <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url); ?>">
+    <input type="hidden" name="action" value="QueryName">
+    <input type="submit" value="<?php echo get_vocab('login') ?>">
+    </div>
+    </form>
+    <?php
+  } 
+  print_userlist_link();
+}
+
+
+function logoff_user()
+{
+  // Unset the session variables
+  session_unset();
+  session_destroy();
+}
+
+
+global $PHP_SELF, $HTTP_REFERER;
+global $shib, $auth;
+
+// Get non-standard form variables
+$action = get_form_var('action', 'string', null, INPUT_POST);
+$username = get_form_var('username', 'string', null, INPUT_POST);
+$password = get_form_var('password', 'string', null, INPUT_POST);
+$target_url = get_form_var('target_url', 'string', null, INPUT_POST);
+$returl = get_form_var('returl', 'string', null, INPUT_POST);
+
+// We need to preserve the original calling page, so that it's there when we eventually get to the
+// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
+// holds the original caller.    If this is the second time through we will have stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
+}
+
+if (isset($action))
+{
+  if ($action == "QueryName")
+  {
+    authGet();
+    exit();
+  }
+
+  // Target of the form with sets the URL argument "action=SetName".
+  // Will eventually return to URL argument "target_url=whatever".
+  if ($action == "SetName")
+  {
+    /* First make sure the password is valid */
+    if ($username == "")
+    {
+      // Unset the session variables
+      if (isset($_SESSION))
+      {
+        $_SESSION = array();
+      }
+      else
+      {
+        global $HTTP_SESSION_VARS;
+        $HTTP_SESSION_VARS = array();
+      }
+      header('Location: '.$auth["session_shib"]["logout"]);
+      exit();
+    }
+    else
+    {
+      exit();
+    }
+    
+    // preserve the original $HTTP_REFERER by sending it as a GET parameter
+    if (!empty($returl))
+    {
+      // check to see whether there's a query string already
+      if (strpos($target_url, '?') === false)
+      {
+        $target_url .= "?returl=" . urlencode($returl);
+      }
+      else
+      {
+        $target_url .= "&returl=" . urlencode($returl);
+      }
+    }
+    session_write_close();
+    header ("Location: $target_url"); /* Redirect browser to initial page */
+    print_header();
+    echo "<br>\n";
+    echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+    print_footer(TRUE);    
+  }
+}
+
+?>

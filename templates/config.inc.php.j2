@@ -72,3 +72,17 @@ $db_tbl_prefix = "{{ mrbs_db_tbl_prefix }}";
 // MRBS tries to avoid those problems, it is generally better not to use persistent
 // connections if you can.
 $db_persist = "{{ mrbs_db_persist }}";
+
+{% if mrbs_shibb_auth %}
+
+// Shibboleth configuration
+$shib['idp'] = "{{ mrbs_shibb_idp }}";                  // --- Set your Identity Provider here
+$shib['sp'] = "{{ mrbs_shibb_sp }}";                  // --- Set your Service Provider here
+$shib['application_url'] = "{{ mrbs_shibb_app_url }}";     // --- Set MRBS application URL here (e.g.: $shib['application_url'] = "/mrbs")
+// Shibboleth authentication
+$auth['type'] = "{{ mrbs_shibb_auth_type }}";
+$auth['session']  = "shib";
+$auth['session_shib']['active_session_url'] = $shib['application_url']."{{ mrbs_shibb_active_session_url }}";
+$auth['session_shib']['logout'] = $shib['idp']."{{ mrbs_shibb_idp_logout }}".$shib['sp']."{{ mrbs_shibb_sp_logout }}".urlencode($shib['sp']).urlencode($shib['application_url']);
+
+{% endif %}

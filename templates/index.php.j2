@@ -1,0 +1,181 @@
+<?php
+
+/************************************************************************
+* 									*
+* index.php for MRBS Shibboleth						*
+* Version: 1.1								*
+* Date: July 2018							*
+* Author: Paolo Nobili - paolo.nobili@unipd.it				*
+* 									*
+* This file is based on the index.php written by Valerio Pulese,	*
+* and has been reworked to get a clearer and more flexible code.	*
+*									*
+************************************************************************/
+
+/************************************************************************
+*									*
+* __ Modifications you should produce in this file __			*
+*									*
+* See the *** Start/End modifications *** block below.			*
+*									*
+* You should modify the "if" condition and add as many conditions	*
+* as you want depending on your needs and on the available Shibboleth	*
+* attributes.								*
+* Do your checks on whatever shib_ attribute is passed back from IDP.	*
+*									*
+* __ Whitelist and blacklist __						*
+*									*
+*   $check_whitelist:		Set to True to enable whitelist.	*
+*				Users in the whitelist bypass all the	*
+*				previous checks and are always allowed.	*
+*				Put the whitelisted users in the	*
+*				shib_whitelist.inc file			*
+*									*
+*   $check_blacklist:		Set to True to enable blacklist.	*
+*				Users in the blacklist bypass all the	*
+*				previous checks and are always denied.	*
+*				Put the blacklisted users in the	*
+*				shib_blacklist.inc file			*
+*									*
+*   $black_white_prevalence:	Set to "w" or "W" if you want whitelist	*
+*				prevalence upon blacklist.		*
+*				Otherwise, if set to whatever different	*
+*				value, it defaults to blacklist		*
+*				prevalence.				*
+*									*
+*									*
+* __ Note on shib_id __							*
+*									*
+* This code assumes shib_id as the user identifier.			*
+* shib_id is usually fine as user identifier, but you may need to	*
+* change it depending on how your IDP is configured.			*
+* Please check with your IDP admin.					*
+*									*
+************************************************************************/
+
+
+// Sessions
+session_id("MRBS_SESSID");  // call before session_set_cookie_params() - see PHP manual
+session_start();
+
+// Configure whitelist/blacklist variables
+$check_whitelist = False;
+$check_blacklist = False;
+$black_white_prevalence = "B";
+
+// Runtime variables
+$authorization_code = 0;
+$user_id = $_SERVER['{{ mrbs_shibb_user_id }}'];
+
+// Includes
+require '../defaultincludes.inc';
+if ( $check_whitelist && file_exists('shib_whitelist.inc') )
+{
+	include 'shib_whitelist.inc';
+}
+else
+{
+	$check_whitelist = False;
+}
+if ( $check_blacklist && file_exists('shib_blacklist.inc') )
+{
+	include 'shib_blacklist.inc';
+}
+else
+{
+	$check_blacklist = False;
+}
+
+// Functions
+function user_ok()
+{
+	global $auth, $shib, $user_id;
+	$_SESSION["UserName"] = $user_id;
+	session_write_close();
+	if ( isset($_REQUEST['target_url']) )
+	{
+		header("Location: ".$shib['sp'].$_REQUEST['target_url']."&returl=".urlencode($_REQUEST['target_url']));
+	}
+	else
+	{
+		header("Location: ".$shib['sp'].$shib['application_url']);
+	}
+}
+
+function user_ko($msg)
+{
+	global $auth, $shib, $user_id;
+	print "<center><p style='margin:20px'>".$msg."</p></center>";
+	if ( isset($_SERVER['Shib-Session-ID']) )
+	{
+		print "<center><hr><p style='margin:10px'>Please logout from SSO:</p><p style='margin:10px'><a href=\"".$auth["session_shib"]["logout"]."\">[LOGOUT]</a></p></center>";
+	}
+	session_destroy();
+}
+
+
+// =======================
+//  Main
+// =======================
+if ( isset($_SESSION) && isset($_SERVER['Shib-Session-ID']) )
+{
+
+
+	//   *** Start modifications ***
+
+	if ( $_SERVER['{{ mrbs_shibb_user_id }}'] == "" ) 
+	{
+		// User is authorized
+		$authorization_code = 1;
+	}
+	else
+	{
+		// User is not authorized
+		$authorization_code = 2;
+	}
+
+	//   *** End modifications ***
+	
+
+
+	if ( $check_whitelist ) { $in_whitelist = in_array($user_id, $shib_whitelist); }
+	if ( $check_blacklist ) { $in_blacklist = in_array($user_id, $shib_blacklist); }
+	if ( strcasecmp($black_white_prevalence, "W") == 0 )
+	{
+		if ( $in_blacklist ) { $authorization_code = 2; }
+		if ( $in_whitelist ) { $authorization_code = 1; }
+	}
+	else
+	{
+		// Default prevalence: blacklist
+		if ( $in_whitelist ) { $authorization_code = 1; }
+		if ( $in_blacklist ) { $authorization_code = 2; }
+	}
+
+}
+else
+{
+	// No session
+	$authorization_code = 10;
+}
+
+switch ( $authorization_code )
+{
+	case 1:
+		// User is authorized
+		user_ok();
+		break;
+	case 2:
+		// User is not authorized
+		user_ko("[authorization_code:".$authorization_code."] Sorry, you are not authorized to access this resource.");
+		break;
+	case 10:
+		// No active session
+		user_ko("[authorization_code:".$authorization_code."] Error: no active session.");
+		break;
+	default:
+		user_ko("[authorization_code:".$authorization_code."] Unknown error.");
+		break;
+}
+
+?>

@@ -1,0 +1,25 @@
+---
+
+- name: MRBS | Create secure directory
+  file: 
+    path: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}/secure"
+    state: directory
+    owner: "{{ mrbs_dir_owner }}"
+    group: "{{ mrbs_dir_group }}"
+    mode: "{{ mrbs_dir_mode }}"
+
+- name: MRBS | Shibb auth index config 
+  template: 
+    src: "index.php.j2"
+    dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}/secure/index.php"
+    owner: "{{ mrbs_dir_owner }}"
+    group: "{{ mrbs_dir_group }}"
+    mode: "{{ mrbs_dir_mode }}"
+
+- name: MRBS | Shibb auth session config 
+  template: 
+    src: "session_shibb.inc.j2"
+    dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}/session/session_shibb.inc"
+    owner: "{{ mrbs_dir_owner }}"
+    group: "{{ mrbs_dir_group }}"
+    mode: "{{ mrbs_dir_mode }}"

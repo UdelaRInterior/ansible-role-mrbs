@@ -34,3 +34,17 @@ mrbs_db_root_password: "password"
 mrbs_db_host: "localhost"
 mrbs_db_system: "mysql"
 mrbs_db_persist: "FALSE"
+
+##############################
+#shibboleth authentication####
+##############################
+
+mrbs_shibb_auth: false
+mrbs_shibb_user_id: "shib_id"
+mrbs_shibb_idp: "https://example-idp.org/idp/shibboleth"
+mrbs_shibb_sp: "https://example-sp.org/shibboleth"
+mrbs_shibb_app_url: "/mrbs"
+mrbs_shibb_auth_type: "none"
+mrbs_shibb_active_session_url: "/secure"
+mrbs_shibb_idp_logout: "/ssologout/logout.jsp?returl="
+mrbs_shibb_sp_logout: "/Shibboleth.sso/Logout?return%3D"
