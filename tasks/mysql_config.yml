@@ -37,5 +37,6 @@
 - name: MRBS | Create db user
   mysql_user:
     name: "{{ mrbs_db_user }}"
+    password: "{{ mrbs_db_user_password }}"
     priv: '{{ mrbs_db_name }}.*:ALL,GRANT'
     state: present
