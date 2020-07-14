@@ -123,7 +123,7 @@ if ( isset($_SESSION) && isset($_SERVER['Shib-Session-ID']) )
 
 	//   *** Start modifications ***
 
-	if ( $_SERVER['{{ mrbs_shibb_user_id }}'] == "" ) 
+	if ( $_SERVER['{{ mrbs_shibb_user_id }}'] != "" ) 
 	{
 		// User is authorized
 		$authorization_code = 1;
