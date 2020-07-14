@@ -18,8 +18,8 @@
 
 - name: MRBS | Shibb auth session config 
   template: 
-    src: "session_shibb.inc.j2"
-    dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}/session/session_shibb.inc"
+    src: "session_shib.inc.j2"
+    dest: "{{ mrbs_base_dir }}/{{ mrbs_dir_name }}/session/session_shib.inc"
     owner: "{{ mrbs_dir_owner }}"
     group: "{{ mrbs_dir_group }}"
     mode: "{{ mrbs_dir_mode }}"

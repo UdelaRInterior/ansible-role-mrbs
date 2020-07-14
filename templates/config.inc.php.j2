@@ -90,7 +90,7 @@ $shib['sp'] = "{{ mrbs_shibb_sp }}";                  // --- Set your Service Pr
 $shib['application_url'] = "{{ mrbs_shibb_app_url }}";     // --- Set MRBS application URL here (e.g.: $shib['application_url'] = "/mrbs")
 // Shibboleth authentication
 $auth['type'] = "{{ mrbs_shibb_auth_type }}";
-$auth['session'] = "shibb";
+$auth['session'] = "shib";
 $auth['session_shib']['active_session_url'] = $shib['application_url']."{{ mrbs_shibb_active_session_url }}";
 $auth['session_shib']['logout'] = {{ mrbs_shibb_logout }}
 
